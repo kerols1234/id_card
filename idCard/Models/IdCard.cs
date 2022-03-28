@@ -1,10 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace idCard.Models
 {
     public class IdCard
     {
+        public IdCard()
+        {
+            Attachments = new HashSet<Attachment>();
+        }
+
         [Key]
         public string NationalId { get; set; }
         [Required]
@@ -25,5 +31,6 @@ namespace idCard.Models
         [Required]
         public DateTime ExpiryDate { get; set; }
 
+        public virtual ICollection<Attachment> Attachments { get; set; }
     }
 }

@@ -24,7 +24,7 @@ namespace idCard.Controllers
         //private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IConfiguration _configuration;
 
-        public AccountController(IConfiguration configuration, AppDbContext db, UserManager<User> userManager/*, RoleManager<IdentityRole> roleManager*/)
+        public AccountController(IConfiguration configuration, UserManager<User> userManager/*, RoleManager<IdentityRole> roleManager*/)
         {
             _userManager = userManager;
             //_roleManager = roleManager;

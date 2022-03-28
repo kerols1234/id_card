@@ -12,5 +12,6 @@ namespace idCard.Data
 
         public DbSet<User> Users { get; set; }
         public DbSet<IdCard> IdCards { get; set; }
+        public DbSet<Attachment> Attachments { get; set; }
     }
 }
