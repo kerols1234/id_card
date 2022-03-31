@@ -26,10 +26,13 @@ namespace idCard.Models
         public string Governorate { get; set; }
 
         [Required]
-        public DateTime BirthDate { get; set; }
+        public int Sex { get; set; }
 
         [Required]
-        public DateTime ExpiryDate { get; set; }
+        public String BirthDate { get; set; }
+
+        [Required]
+        public String ExpiryDate { get; set; }
 
         public virtual ICollection<Attachment> Attachments { get; set; }
     }

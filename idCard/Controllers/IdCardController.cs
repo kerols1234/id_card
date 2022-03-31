@@ -18,7 +18,6 @@ namespace idCard.Controllers
     [Route("api/[controller]/[action]")]
     [EnableCors]
     [ApiController]
-    [Authorize]
     public class IdCardController : ControllerBase
     {
         private readonly AppDbContext _db;
@@ -35,7 +34,22 @@ namespace idCard.Controllers
         [HttpGet]
         public IActionResult getAllIdCards()
         {
-            return Ok(_db.IdCards.Include(obj => obj.Attachments).ToList());
+            var webRootPath = _httpContextAccessor.HttpContext.Request.Host.ToString() ?? string.Empty;
+
+            return Ok(_db.IdCards.Include(obj => obj.Attachments).Select(obj => new
+            {
+                Address = obj.Address,
+                NationalId = obj.NationalId,
+                ExpiryDate = obj.ExpiryDate,
+                FullName = obj.FullName,
+                FirstName = obj.FirstName,
+                BirthDate = obj.BirthDate,
+                Sex = obj.Sex,
+                Governorate = obj.Governorate,
+                Attachments = obj.Attachments.Select(o =>
+                    Path.Combine(Path.Combine(webRootPath, WebConstant.DocumentPath + obj.NationalId),o.Document)
+                ).ToList(),
+            }).ToList());
         }
 
         [HttpGet]
@@ -44,7 +58,22 @@ namespace idCard.Controllers
             if (!_db.IdCards.Any(obj => obj.NationalId == nationalId))
                 return BadRequest("No IdCard whith this NationalId");
 
-            return Ok(_db.IdCards.Include(obj => obj.Attachments).FirstOrDefault(obj => obj.NationalId == nationalId));
+            var webRootPath = _httpContextAccessor.HttpContext.Request.Host.ToString() ?? string.Empty;
+
+            return Ok(_db.IdCards.Include(obj => obj.Attachments).Select(obj => new
+            {
+                Address = obj.Address,
+                NationalId = obj.NationalId,
+                ExpiryDate = obj.ExpiryDate,
+                FullName = obj.FullName,
+                FirstName = obj.FirstName,
+                BirthDate = obj.BirthDate,
+                Sex = obj.Sex,
+                Governorate = obj.Governorate,
+                Attachments = obj.Attachments.Select(o =>
+                    Path.Combine(Path.Combine(webRootPath, WebConstant.DocumentPath + obj.NationalId), o.Document)
+                ).ToList(),
+            }).FirstOrDefault(obj => obj.NationalId == nationalId));
         }
 
         [HttpPost]
@@ -71,6 +100,7 @@ namespace idCard.Controllers
             card.BirthDate = idCard.BirthDate;
             card.ExpiryDate = idCard.ExpiryDate;
             card.Governorate = idCard.Governorate;
+            card.Sex = idCard.Sex;
             _db.IdCards.Update(card);
             _db.SaveChanges();
 
